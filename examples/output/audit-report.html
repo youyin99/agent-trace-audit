@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Trace Audit</title>
+<style>
+:root { color-scheme:light; --bg:#f4f2ed; --panel:#fffdf8; --ink:#202524; --muted:#69716e; --line:#d9d5ca; --accent:#263d46; --critical:#7a1f1f; --critical-bg:#f6dedb; --high:#8c3420; --high-bg:#f9e4dc; --medium:#835c08; --medium-bg:#f8edcf; --low:#335b6b; --low-bg:#e4edf0; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 "Segoe UI",system-ui,sans-serif; }
+header { background:var(--accent); color:#fff; padding:36px max(20px,6vw) 30px; }
+header .eyebrow { opacity:.72; font-size:12px; letter-spacing:.12em; text-transform:uppercase; }
+h1 { margin:6px 0; font-size:clamp(28px,4vw,44px); }
+header p { max-width:900px; opacity:.85; }
+main { max-width:1220px; margin:0 auto; padding:24px; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:12px; margin:-46px 0 22px; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:15px; box-shadow:0 8px 24px rgba(38,61,70,.08); }
+.card b { display:block; font-size:28px; color:var(--accent); }
+.card span { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
+section { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px; margin:16px 0; }
+h2 { margin:0 0 12px; font-size:21px; }
+h3 { margin:0 0 10px; }
+table { width:100%; border-collapse:collapse; display:block; overflow-x:auto; }
+th,td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.05em; }
+code { background:#ebe7dc; padding:1px 4px; border-radius:4px; font-size:.9em; overflow-wrap:anywhere; }
+.badge { display:inline-block; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; }
+.critical { color:var(--critical); background:var(--critical-bg); }
+.high { color:var(--high); background:var(--high-bg); }
+.medium { color:var(--medium); background:var(--medium-bg); }
+.low { color:var(--low); background:var(--low-bg); }
+.chain { border:1px solid var(--line); border-radius:10px; padding:16px; margin:12px 0; background:#fff; }
+.flow { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:10px 0; }
+.node { border:1px solid var(--line); border-radius:8px; padding:7px 9px; font-size:12px; background:#f7f4ed; }
+.arrow { color:var(--muted); }
+.note { font-size:12px; color:var(--muted); }
+.muted { color:var(--muted); }
+footer { color:var(--muted); font-size:12px; margin:20px 0 40px; }
+@media (max-width:640px) { main { padding:16px; } header { padding:28px 18px; } .cards { margin-top:16px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Evidence correlation · not a causal proof</div>
+  <h1>Agent Trace Audit</h1>
+  <p>Events are validated, deduplicated, sorted, redacted, and correlated with receiver evidence. The report preserves identifiers and hashes, never synthetic secret plaintext.</p>
+</header>
+<main>
+  <div class="cards">
+    <div class="card"><b>7</b><span>Events</span></div>
+    <div class="card"><b>1</b><span>Receipts</span></div>
+    <div class="card"><b>10</b><span>Alerts</span></div>
+    <div class="card"><b>1</b><span>Provenance chains</span></div>
+    <div class="card"><b>1</b><span>Duplicates removed</span></div>
+    <div class="card"><b>6</b><span>Collection issues</span></div>
+  </div>
+  <section>
+    <h2>Alerts</h2>
+    <table>
+      <thead><tr><th>Rule</th><th>Severity</th><th>Title</th><th>Message</th><th>Events</th><th>Receipts</th></tr></thead>
+      <tbody><tr><td><code>AUD-003</code></td><td><span class='badge high'>high</span></td><td>Untrusted-origin egress succeeded</td><td>A send derived from untrusted content succeeded.</td><td><code>evt-send-1</code></td><td><code>—</code></td></tr><tr><td><code>AUD-006</code></td><td><span class='badge high'>high</span></td><td>Sensitive data observed at the receiver</td><td>The local receiver recorded synthetic secret material.</td><td><code>evt-send-1</code></td><td><code>rcpt-demo-1</code></td></tr><tr><td><code>AUD-004</code></td><td><span class='badge high'>high</span></td><td>Sensitive-data egress succeeded</td><td>A successful egress event carried synthetic secret identifiers.</td><td><code>evt-send-1</code></td><td><code>—</code></td></tr><tr><td><code>AUD-008</code></td><td><span class='badge medium'>medium</span></td><td>Missing parent event</td><td>An event references a parent that is not present.</td><td><code>evt-missing-parent</code></td><td><code>—</code></td></tr><tr><td><code>AUD-009</code></td><td><span class='badge medium'>medium</span></td><td>Plaintext synthetic secret in input</td><td>A plaintext synthetic secret was present in the input and was redacted.</td><td><code>evt-raw-secret</code></td><td><code>—</code></td></tr><tr><td><code>AUD-009</code></td><td><span class='badge medium'>medium</span></td><td>Plaintext synthetic secret in input</td><td>A plaintext synthetic secret was present in the input and was redacted.</td><td><code>evt-send-1</code></td><td><code>—</code></td></tr><tr><td><code>AUD-001</code></td><td><span class='badge medium'>medium</span></td><td>Missing permission decision</td><td>A tool event has no valid permission decision.</td><td><code>evt-missing-perm</code></td><td><code>—</code></td></tr><tr><td><code>AUD-002</code></td><td><span class='badge low'>low</span></td><td>Egress attempt was denied</td><td>An external send was denied by the recorded policy.</td><td><code>evt-deny-1</code></td><td><code>—</code></td></tr><tr><td><code>AUD-002</code></td><td><span class='badge low'>low</span></td><td>Egress attempt was denied</td><td>An external send was denied by the recorded policy.</td><td><code>evt-raw-secret</code></td><td><code>—</code></td></tr><tr><td><code>AUD-002</code></td><td><span class='badge low'>low</span></td><td>Egress attempt was denied</td><td>An external send was denied by the recorded policy.</td><td><code>evt-missing-parent</code></td><td><code>—</code></td></tr></tbody>
+    </table>
+  </section>
+  <section>
+    <h2>Provenance associations</h2>
+    <p class="muted">Associated from recorded parent/event identifiers and receiver evidence. This is not a proof of causation.</p>
+    
+<div class="chain">
+  <h3>vendor-memo</h3>
+  <div class="flow">
+    <span class="node">Source<br>external</span>
+    <span class="arrow">→</span>
+    <span class="node">Read<br><code>evt-read-1</code></span>
+    <span class="arrow">→</span>
+    <span class="node">Egress<br><code>evt-send-1</code></span>
+    <span class="arrow">→</span>
+    <span class="node">Permission<br>allow<br>destination_allowlisted</span>
+    <span class="arrow">→</span>
+    <span class="node">Receiver<br><code>rcpt-demo-1</code></span>
+  </div>
+  <p><strong>Execution:</strong> ok · accepted by local receiver</p>
+  <p><strong>Observed sensitive identifiers:</strong> gamma-vendor-key, synthetic-a8ee75d7cdda</p>
+  <p><strong>Destination:</strong> partner@partner.example.test</p>
+  <p class="note">Associated from recorded parent/event identifiers and receiver evidence. This is not a proof of causation.</p>
+</div>
+  </section>
+  <section>
+    <h2>Timeline</h2>
+    <table>
+      <thead><tr><th>Timestamp</th><th>Event</th><th>Tool</th><th>Origin</th><th>Permission</th><th>Result</th><th>Principal</th></tr></thead>
+      <tbody><tr><td>2026-01-01T00:00:00.500Z</td><td><code>evt-early</code></td><td>search_documents</td><td>user</td><td>allow</td><td>ok</td><td>user-alice</td></tr><tr><td>2026-01-01T00:00:01Z</td><td><code>evt-read-1</code></td><td>read_file</td><td>user</td><td>allow</td><td>ok</td><td>user-alice</td></tr><tr><td>2026-01-01T00:00:02Z</td><td><code>evt-send-1</code></td><td>send_external</td><td>injected</td><td>allow</td><td>ok</td><td>user-alice</td></tr><tr><td>2026-01-01T00:00:03Z</td><td><code>evt-deny-1</code></td><td>send_external</td><td>injected</td><td>deny</td><td>denied</td><td>user-alice</td></tr><tr><td>2026-01-01T00:00:04Z</td><td><code>evt-missing-perm</code></td><td>read_file</td><td>user</td><td>—</td><td>ok</td><td>user-alice</td></tr><tr><td>2026-01-01T00:00:05Z</td><td><code>evt-missing-parent</code></td><td>send_external</td><td>user</td><td>deny</td><td>denied</td><td>user-alice</td></tr><tr><td>2026-01-01T00:00:06Z</td><td><code>evt-raw-secret</code></td><td>send_external</td><td>user</td><td>deny</td><td>denied</td><td>user-alice</td></tr></tbody>
+    </table>
+  </section>
+  <section>
+    <h2>Collection issues</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Severity</th><th>Kind</th><th>Message</th><th>Location</th></tr></thead>
+      <tbody><tr><td><code>collect-0001</code></td><td><span class='badge low'>low</span></td><td>duplicate_event</td><td>identical duplicate event was removed</td><td>events.jsonl:3</td></tr><tr><td><code>collect-0002</code></td><td><span class='badge high'>high</span></td><td>invalid_permission_decision</td><td>permission.decision is missing or invalid</td><td>events.jsonl:6</td></tr><tr><td><code>collect-0003</code></td><td><span class='badge medium'>medium</span></td><td>plaintext_secret_redacted</td><td>plaintext synthetic secret was detected in the input and redacted</td><td>events.jsonl:8</td></tr><tr><td><code>collect-0004</code></td><td><span class='badge low'>low</span></td><td>out_of_order_events</td><td>2 event timestamp(s) were earlier than a preceding event</td><td>event inputs</td></tr><tr><td><code>collect-0005</code></td><td><span class='badge medium'>medium</span></td><td>missing_parent_event</td><td>parent event &#x27;evt-does-not-exist&#x27; is not present</td><td>event inputs</td></tr><tr><td><code>collect-0006</code></td><td><span class='badge medium'>medium</span></td><td>plaintext_secret_redacted</td><td>plaintext synthetic secret was detected in a receipt and redacted</td><td>receipts.jsonl:1</td></tr></tbody>
+    </table>
+  </section>
+  <section>
+    <h2>Scope and limitations</h2>
+    <ul><li>Input events are treated as records, not trusted instructions.</li><li>Correlation is based on recorded IDs, parent links, and receiver evidence; it is not a proof of causation.</li><li>The redactor covers explicitly synthetic DEMOSECRET-* material and its Base64 variants.</li><li>Missing or malformed records are reported and handled defensively, not silently repaired in source data.</li></ul>
+    <p class="muted">Generated 2026-11-20T16:19:17.477Z · agent-trace-audit 1.0.0</p>
+  </section>
+  <footer>All displayed values are redacted. Correlation is an investigative aid, not proof of causation.</footer>
+</main>
+</body>
+</html>
